@@ -31,12 +31,6 @@ var FlatButton = React.createClass({
     }
   },
 
-  getInitialState: function() {
-    return {
-      hovered: false,
-    };
-  },
-
   getThemeButton: function() {
     return this.context.muiTheme.component.button;
   },
@@ -96,10 +90,6 @@ var FlatButton = React.createClass({
 
     styles.root.color = this._getColor();
 
-    styles.rootWhenHovered = {
-        backgroundColor: ColorManipulator.fade(ColorManipulator.lighten(styles.root.color, 0.4), 0.15)
-    };
-
     var labelElement;
     if (label) {
       labelElement = (
@@ -116,7 +106,6 @@ var FlatButton = React.createClass({
         ref="enhancedButton"
         style={this.mergeAndPrefix(
           styles.root,
-          (this.state.hovered && !this.props.disabled) && styles.rootWhenHovered,
           this.props.style
         )}
         onMouseOver={this._handleMouseOver} 
@@ -131,13 +120,24 @@ var FlatButton = React.createClass({
   },
 
   _handleMouseOver: function(e) {
-    if (!this.refs.enhancedButton.isKeyboardFocused()) this.setState({hovered: true});
-    if (this.props.onMouseOver) this.props.onMouseOver(e);
+    if (!this.refs.enhancedButton.isKeyboardFocused() && !this.props.disabled) {
+      if (this.props.onMouseOver) {
+        this.props.onMouseOver(e);
+      } else {
+        console.log('test');
+        this.getDOMNode().style.backgroundColor = ColorManipulator.fade(ColorManipulator.lighten(this._getColor(), 0.4), 0.15)
+      }
+    }
   },
 
   _handleMouseOut: function(e) {
-    if (!this.refs.enhancedButton.isKeyboardFocused()) this.setState({hovered: false});
-    if (this.props.onMouseOut) this.props.onMouseOut(e);
+    if (!this.refs.enhancedButton.isKeyboardFocused() && !this.props.disabled) {
+      if (this.props.onMouseOut) {
+        this.props.onMouseOut(e);
+      } else {
+        this.getDOMNode().style.backgroundColor = this.getTheme().color
+      }
+    }
   },
 
   _handleKeyboardFocus: function(e, keyboardFocused) {
