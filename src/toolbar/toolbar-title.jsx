@@ -1,5 +1,6 @@
 var React = require('react');
 var StylePropable = require('../mixins/style-propable');
+var Extend = require('../utils/extend');
 
 var ToolbarTitle = React.createClass({
 
@@ -18,8 +19,10 @@ var ToolbarTitle = React.createClass({
   },
 
   render: function() {
+    var props = Extend({}, this.props);
+    delete props.text;
 
-    var styles = this.mergeAndPrefix({
+    props.style = this.mergeAndPrefix({
       paddingRight: this.context.muiTheme.spacing.desktopGutterLess,
       lineHeight: this.getTheme().height + 'px',
       fontSize: this.getTheme().titleFontSize + 'px',
@@ -28,7 +31,7 @@ var ToolbarTitle = React.createClass({
     }, this.props.style);
 
     return (
-      <span className={this.props.className} style={styles}>{this.props.text}</span>
+      <span {...props}>{this.props.text}</span>
     );
   }
 
